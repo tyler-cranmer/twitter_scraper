@@ -130,3 +130,7 @@ dmypy.json
 
 # Config File
 config.py
+
+# debugger
+.vscode
+launch.json
