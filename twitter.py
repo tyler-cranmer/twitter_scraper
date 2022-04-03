@@ -100,26 +100,29 @@ def follow(toFollow: str, following: str) -> None:
     client: object = getClient()
     people_to_follow: list[dict] = readJson(f'{config.VPS_DIRECTORY}data/{toFollow}')
     already_following: list[dict] = readJson(f'{config.VPS_DIRECTORY}data/{following}')
-    if (len(people_to_follow) > 0 and count <= 400):
-        for user in people_to_follow:
-            if not user in already_following:
-                try:
-                    client.follow_user(user['userID'])
-                    already_following.append(user)
-                    print(f'Successfully followed username: {user["userName"]}')
-                    count += 1
-                    sleep(5)
-                except:
-                    print(f'Trouble following username: {user["userName"]} userID: {user["userID"]}')
-            else:
-                print(f'Already Following {user["userName"]}')
+    if (len(people_to_follow) > 0):
+            for user in people_to_follow:
+                if (not user in already_following):
+                    try:
+                        client.follow_user(user['userID'])
+                        already_following.append(user)
+                        print(f'Successfully followed username: {user["userName"]}')
+                        count += 1
+                        sleep(5)
+                    except:
+                        print(f'Trouble following username: {user["userName"]} userID: {user["userID"]}')
+                        count +=1
+                else:
+                    print(f'Already Following {user["userName"]}')
     writeJson(f'{config.VPS_DIRECTORY}data/{following}', already_following)
 
 
 
 if __name__ == '__main__':
     peter = 1304602369750003712
-    tyler_id = 4286418493
+    tyler = 4286418493
     follow('petersFollowing.json', 'tylersFollowing.json')
+    # followers = getUserFollowing(tyler, 500)
     # filepath = '{}/data/tylersFollowing.json'.format(config.VPS_DIRECTORY)
     # writeJson(filepath, followers)
+    # print(len(followers))
