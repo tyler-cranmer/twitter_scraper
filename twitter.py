@@ -105,7 +105,7 @@ def follow(toFollow: str, following: str) -> None:
     already_following: list[dict[str,str]] = readJson(f'{config.VPS_DIRECTORY}data/{following}')
     if (len(people_to_follow) > 0):
             for user in people_to_follow:
-                if (success_count > 399 or unsuccess_count > 50):
+                if (success_count >= 400 or unsuccess_count > 50):
                     break
                 elif (not user in already_following):
                     try:

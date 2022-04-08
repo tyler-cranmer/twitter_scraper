@@ -135,7 +135,7 @@ def unFollow(unFollow: str) -> None:
     following: list[dict[str,str]] = readJson(f'{config.VPS_DIRECTORY}data/{unFollow}')
     if (len(following) > 0):
         for user in following:
-            if(success_count > 400 or unsuccess_count > 50):
+            if(success_count >= 400 or unsuccess_count > 50):
                 break
             else:
                 try:
