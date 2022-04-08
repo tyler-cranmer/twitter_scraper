@@ -4,6 +4,7 @@ import config
 import json
 from time import sleep
 import random
+import typing
 
 def getClient() -> object:
     client = tweepy.Client(bearer_token=config.NFF33T_BEARER_TOKEN,
@@ -12,7 +13,7 @@ def getClient() -> object:
                         access_token=config.NFF33T_ACCESS_TOKEN, 
                         access_token_secret=config.NFF33T_ACCESS_TOKEN_SECRET,)
     return client
-    
+
 # Returns twitter user information
 # username: a string of the username without @
 def getUserInfo(username: str) -> object:
@@ -21,12 +22,12 @@ def getUserInfo(username: str) -> object:
     return user
 
 
-def writeJson(filepath: str, data: list) -> json:
+def writeJson(filepath: str, data: list) -> None:
     with open(filepath, 'w') as fp:
         json.dump(data,fp)
 
 
-def readJson(filename: str) -> json:
+def readJson(filename: str) -> list[dict[str,str]]:
     with open(filename, 'r', encoding='utf-8') as fp:
         return json.load(fp)
 
@@ -96,31 +97,60 @@ def getUserFollowing(_id: int, _max_results: int) -> list:
 # will not follow usernames that are already in the following json file.
 # updates following file with new list of usernames that are now following         
 def follow(toFollow: str, following: str) -> None:
-    count: int = 0
+    unsuccess_count: int = 0
     success_count: int = 0
     client: object = getClient()
-    people_to_follow: list[dict] = readJson(f'{config.VPS_DIRECTORY}data/{toFollow}')
-    already_following: list[dict] = readJson(f'{config.VPS_DIRECTORY}data/{following}')
+    people_to_follow: list[dict[str,str]] = readJson(f'{config.VPS_DIRECTORY}data/{toFollow}')
+    already_following: list[dict[str,str]] = readJson(f'{config.VPS_DIRECTORY}data/{following}')
     if (len(people_to_follow) > 0):
             for user in people_to_follow:
-                if (count > 399):
+                if (success_count > 399 or unsuccess_count > 50):
                     break
                 elif (not user in already_following):
                     try:
                         client.follow_user(user['userID'])
                         already_following.append(user)
                         print(f'Successfully followed username: {user["userName"]}')
-                        count += 1
                         success_count +=1
                         sleep(20) # 50 calls per 15 min. ratelimit
                     except:
                         print(f'Trouble following username: {user["userName"]} userID: {user["userID"]}')
-                        count +=1
+                        unsuccess_count +=1
                 else:
                     print(f'Already Following {user["userName"]}')
     writeJson(f'{config.VPS_DIRECTORY}data/{following}', already_following)
-    print(f'You successfully followed {success_count} accounts.')
+    print(f'You successfully followed {success_count} accounts. \n There were {unsuccess_count} unsucessful follows.')
+
+# This function unfollows up to 400 users in a given json file
+# 
+# unfollow: json file
+# 
+# Twitter API limit is 400 per 24h. So the function will unfollow the top 400
+# users and then remove users from file for next fun
+# 50 api calls per 15 min limit
+def unFollow(unFollow: str) -> None:
+    unsuccess_count: int = 0
+    success_count: int = 0
+    client: object = getClient()
+    following: list[dict[str,str]] = readJson(f'{config.VPS_DIRECTORY}data/{unFollow}')
+    if (len(following) > 0):
+        for user in following:
+            if(success_count > 400 or unsuccess_count > 50):
+                break
+            else:
+                try:
+                    client.unfollow_user(user['userID'])
+                    index: int = following.index(user)
+                    following.pop(index)
+                    success_count += 1
+                    sleep(20) # 50 calls per 15 min. ratelimit
+                except:
+                    print(f'Trouble unfollowing username: {user["userName"]} userID: {user["userID"]}')
+                    unsuccess_count += 1
+    writeJson(f'{config.VPS_DIRECTORY}data/{unFollow}', following)
+    print(f'You successfully followed {success_count} accounts. \n There were {unsuccess_count} unsucessful follows.')
+
 
 if __name__ == '__main__':
-    nff33t = 1472284812475920384
+    nff33t: int = 1472284812475920384
     follow('names.json', 'following.json')
