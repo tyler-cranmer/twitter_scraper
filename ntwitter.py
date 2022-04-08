@@ -5,16 +5,14 @@ import json
 from time import sleep
 import random
 
-
 def getClient() -> object:
-    client = tweepy.Client(bearer_token=config.BEARER_TOKEN,
-                        consumer_key=config.TWITTER_API_KEY, 
-                        consumer_secret=config.TWITTER_API_SECRET_KEY, 
-                        access_token=config.ACCESS_TOKEN, 
-                        access_token_secret=config.ACCESS_TOKEN_SECRET,)
+    client = tweepy.Client(bearer_token=config.NFF33T_BEARER_TOKEN,
+                        consumer_key=config.NFF33T_TWITTER_API_KEY, 
+                        consumer_secret=config.NFF33T_TWITTER_API_SECRET_KEY, 
+                        access_token=config.NFF33T_ACCESS_TOKEN, 
+                        access_token_secret=config.NFF33T_ACCESS_TOKEN_SECRET,)
     return client
-
-
+    
 # Returns twitter user information
 # username: a string of the username without @
 def getUserInfo(username: str) -> object:
@@ -123,43 +121,6 @@ def follow(toFollow: str, following: str) -> None:
     writeJson(f'{config.VPS_DIRECTORY}data/{following}', already_following)
     print(f'You successfully followed {success_count} accounts.')
 
-# This function unfollows up to 400 users in a given json file
-# 
-# unfollow: json file
-# 
-# Twitter API limit is 400 per 24h. So the function will unfollow the top 400
-# users and then remove users from file for next fun
-def unFollow(unFollow: str) -> None:
-    count: int = 0
-    success_count: int = 0
-    client: object = getClient()
-    following: list[dict] = readJson(f'{config.VPS_DIRECTORY}data/{unFollow}')
-    if (len(following) > 0):
-        for user in following:
-            if(count > 400):
-                break
-            else:
-                try:
-                    client.unfollow_user(user['userID'])
-                    index: int = following.index(user)
-                    following.pop(index)
-                    count += 1
-                    success_count += 1
-                    sleep(20) # 50 calls per 15 min. ratelimit
-                except:
-                    print(f'Trouble unfollowing username: {user["userName"]} userID: {user["userID"]}')
-                    count += 1
-    writeJson(f'{config.VPS_DIRECTORY}data/{unFollow}', following)
-    print(f'You successfully unfollowed {success_count} accounts.')
-
-
 if __name__ == '__main__':
-    peter = 1304602369750003712
-    tyler = 4286418493
     nff33t = 1472284812475920384
-    follow('petersFollowing.json', 'tylersFollowing.json')
-    # followers = getUserFollowing(tyler, 500)
-    # filepath = '{}/data/tylersFollowing.json'.format(config.VPS_DIRECTORY)
-    # writeJson(filepath, followers)
-    # print(len(followers))
-    # print(getUserInfo('nff33t'))
+    follow('names.json', 'following.json')
