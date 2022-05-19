@@ -156,10 +156,10 @@ if __name__ == '__main__':
     peter: int = 1304602369750003712
     tyler: int = 4286418493
     nff33t: int = 1472284812475920384
-    # follow('petersFollowing.json', 'tylersFollowing.json')m
+    follow('petersFollowing.json', 'tylersFollowing.json')
     # followers = getUserFollowing(tyler, 500)
-    filepath = '{}/data/tylersFollowing.json'.format(config.VPS_DIRECTORY)
+    # filepath = '{}/data/tylersFollowing.json'.format(config.VPS_DIRECTORY)
     # writeJson(filepath, followers)
     # print(len(followers))
     # print(getUserInfo('nff33t'))
-    print(readJson(filepath))
+    # print(readJson(filepath))
