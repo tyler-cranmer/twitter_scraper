@@ -33,7 +33,7 @@ def readJson(filename: str) -> list[dict[str,str]]:
         return json.load(fp)
 
 # Returns a list of all the users followers
-# _id: userID
+# _id: userIDmain.p
 # _max_results: 1 to 1000; max is 1000 users per page
 #
 # This function has a ratelimit built in. No more than 15 api calls per 15 minutes. 
@@ -153,6 +153,7 @@ def unFollow(unFollow: str) -> None:
 
 
 if __name__ == '__main__':
+    
     peter: int = 1304602369750003712
     tyler: int = 4286418493
     nff33t: int = 1472284812475920384
