@@ -15,17 +15,17 @@ class DB:
     def create(dbname: str):
         connection = sqlite3.connect(dbname) #database name must end in .db
         c = connection.cursor()
-        c.execute("""CREATE TABLE IF NOT EXISTS ACCOUNT 
+        c.execute("""CREATE TABLE IF NOT EXISTS USERS
         ( 
-            ID TEXT NOT NULL PRIMARY KEY,
-            HANDLE TEXT NOT NULL,
-            TWITTERID TEXT NOT NULL
+            ID INTEGER PRIMARY KEY,
+            HANDLE TEXT,
         ); """)
 
-        c.execute("""CREATE TABLE IF NOT EXISTS FOLLOWER (
-            HANDLE TEXT NOT NULL,
-            TWITTERID TEXT NOT NULL,
-            FOREIGN KEY(ACCOUNT_HANDLE) REFERENCE ACCOUNT(ID)
+        c.execute("""CREATE TABLE IF NOT EXISTS FOLLOWERS (
+            USER_ID INTEGER,
+            FOLLOWER_ID INTEGER,
+            FOREIGN KEY(USER_ID) REFERENCES USERS(ID)
+            FOREIGN KEY(FOLLOWER_ID) REFERENCE USERS(ID)
         ); """)
 
         connection.commit()
@@ -47,3 +47,14 @@ class DB:
         # connection.commit()
         # connection.close()
     
+    def get_top_n_accounts(dbname, amount):
+        connection = sqlite3.connect(dbname) #database name must end in .db
+        c = connection.cursor()
+
+        c.execute("SELECT USERS.HANDLE, COUNT(FOLLOWERS.FOLLOWER_ID) AS NUM_FOLLOWERS FROM USERS JOIN FOLLOWERS ON FOLLOWERS.USER_ID = USERS.ID GROUP BY USERS.HANDLE ORDER BY NUM_FOLLOWERS DESC LIMIT :AMOUNT);",
+
+            {
+                "AMOUNT": amount
+            }
+        )
+         
