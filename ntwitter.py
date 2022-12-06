@@ -46,17 +46,21 @@ def getAllFollowers(_id: int, _max_results: int) -> list:
             sleep(60*15)  # Wait for 15 minutes
         elif('next_token' not in users.meta):
             for user in users.data:
-                dic = {}
-                dic.update({"userName": user.username})
-                dic.update({"userID": str(user.id)})
-                followers.append(dic)
+                # dic = {}
+                # dic.update({"userName": user.username})
+                # dic.update({"userID": str(user.id)})
+                # followers.append(dic)
+                info = (user.username, str(user.id))
+                followers.append(info)
             break
         else:
             for user in users.data:
-                dic = {}
-                dic.update({"userName": user.username})
-                dic.update({"userID": str(user.id)})
-                followers.append(dic)
+                # dic = {}
+                # dic.update({"userName": user.username})
+                # dic.update({"userID": str(user.id)})
+                # followers.append(dic)
+                info = (user.username, str(user.id))
+                followers.append(info)
             users = client.get_users_followers(id=_id, max_results=_max_results, pagination_token= users.meta['next_token'])
         count += 1
     return followers
@@ -152,5 +156,17 @@ def unFollow(unFollow: str) -> None:
 
 
 if __name__ == '__main__':
-    nff33t: int = 1472284812475920384
-    follow('names.json', 'following.json')
+    people = [1304602369750003712, 1304602369750003712, 4286418493, 1472284812475920384]
+
+    dic = {}
+    for i, val1 in enumerate(people):
+        l = getAllFollowers(val1, 1000)
+    
+        for j , val in enumerate(l):
+            if val[0] not in dic:
+                dic[val[0]] = 1
+            else:
+                dic[val[0]] += 1
+
+    sorted_dic = sorted(dic.items(), key=lambda x:x[1])
+    print(sorted_dic)
