@@ -25,7 +25,7 @@ class DB:
             USER_ID INTEGER,
             FOLLOWER_ID INTEGER,
             FOREIGN KEY(USER_ID) REFERENCES USERS(ID)
-            FOREIGN KEY(FOLLOWER_ID) REFERENCE USERS(ID)
+            FOREIGN KEY(FOLLOWER_ID) REFERENCES USERS(ID)
         ); """)
 
         connection.commit()
@@ -57,4 +57,5 @@ class DB:
                 "AMOUNT": amount
             }
         )
-         
+        db_list = list(c.fetchall())
+        print(db_list)

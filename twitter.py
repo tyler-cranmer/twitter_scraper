@@ -176,17 +176,18 @@ if __name__ == '__main__':
     # print(readJson(filepath))
 
     people = [1304602369750003712, 4286418493]
-
-    dic = {}
-    for i, val1 in enumerate(people):
-        l = getUserFollowing(val1, 1000)
+    l = getUserFollowing(people[0], 100)
+    print(l)
+    # dic = {}
+    # for i, val1 in enumerate(people):
+    #     l = getUserFollowing(val1, 1000)
     
-        for j , val in enumerate(l):
-            if val[0] not in dic:
-                dic[val[0]] = 1
-            else:
-                dic[val[0]] += 1
+    #     for j , val in enumerate(l):
+    #         if val[0] not in dic:
+    #             dic[val[0]] = 1
+    #         else:
+    #             dic[val[0]] += 1
 
-    sorted_dic = sorted(dic.items(), key=lambda x:x[1])
-    print(sorted_dic)
+    # sorted_dic = sorted(dic.items(), key=lambda x:x[1])
+    # print(sorted_dic)
     # print(followers)

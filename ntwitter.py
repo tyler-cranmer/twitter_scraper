@@ -156,17 +156,20 @@ def unFollow(unFollow: str) -> None:
 
 
 if __name__ == '__main__':
-    people = [1304602369750003712, 1304602369750003712, 4286418493, 1472284812475920384]
+    # people = [1304602369750003712, 1304602369750003712, 4286418493, 1472284812475920384]
 
-    dic = {}
-    for i, val1 in enumerate(people):
-        l = getAllFollowers(val1, 1000)
+    # dic = {}
+    # for i, val1 in enumerate(people):
+    #     l = getAllFollowers(val1, 1000)
     
-        for j , val in enumerate(l):
-            if val[0] not in dic:
-                dic[val[0]] = 1
-            else:
-                dic[val[0]] += 1
+    #     for j , val in enumerate(l):
+    #         if val[0] not in dic:
+    #             dic[val[0]] = 1
+    #         else:
+    #             dic[val[0]] += 1
 
-    sorted_dic = sorted(dic.items(), key=lambda x:x[1])
-    print(sorted_dic)
+    # sorted_dic = sorted(dic.items(), key=lambda x:x[1])
+    # print(sorted_dic)
+    people = [1304602369750003712, 4286418493]
+    l = getUserFollowing(people[0], 100)
+    print(l)
